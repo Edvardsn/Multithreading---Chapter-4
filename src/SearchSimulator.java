@@ -1,11 +1,12 @@
-package computation;
+package src;
+
 
 /**
  * Send a fake computational request to server.
  */
-public class searchSimulator {
+public class SearchSimulator {
 
-    public static void clientRequest() throws InterruptedException {
+    public static String clientRequest() throws InterruptedException {
 
         long time1 = System.currentTimeMillis();
         System.out.println("Request processing started at: " + time1 + "milliseconds.");
@@ -18,9 +19,8 @@ public class searchSimulator {
         long result = time2 - time1;
         System.out.println("" + result + "milliseconds, equal to: " + (result / 1000) + "seconds");
 
+
+        return ResponseGenerator.generatorResponseHTML(time1, time2);
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        clientRequest();
-    }
 }
