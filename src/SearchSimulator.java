@@ -6,21 +6,28 @@ package src;
  */
 public class SearchSimulator {
 
+
+    private static int counter = 0;
+
     public static String clientRequest() throws InterruptedException {
+        counter++;
+
+        System.out.println("Incoming Request ID: nr." + counter);
 
         long time1 = System.currentTimeMillis();
-        System.out.println("Request processing started at: " + time1 + "milliseconds.");
+        System.out.println("Request processing started at: " + (time1 / 1000) + "milliseconds.");
 
-        Thread.sleep(10 * 100); // 10 seconds, 10000
+        Thread.sleep(100); // 10 seconds, 10000
 
         long time2 = System.currentTimeMillis();
-        System.out.println("Request processing ended at: " + time2 + "milliseconds.");
+        System.out.println("Request processing ended at: " + (time2 / 1000) + "milliseconds.");
 
-        long result = time2 - time1;
-        System.out.println("" + result + "milliseconds, equal to: " + (result / 1000) + "seconds");
+        String responseBody = ResponseGenerator.generatorResponseHTML(time1, time2, counter);
+        String responseHeader = ResponseGenerator.generatorResponseHeader(responseBody.length());
 
+        String message = responseHeader + responseBody; 
 
-        return ResponseGenerator.generatorResponseHTML(time1, time2);
+        return message;
     }
 
 }
