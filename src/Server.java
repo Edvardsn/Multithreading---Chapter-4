@@ -2,28 +2,22 @@ package src;
 
 import java.net.ServerSocket;
 
-
+/**
+ * Parent class for single- and multi-threaded servers.
+ */
 public class Server {
 
     protected static final int port = 8080;
-    protected static int portCounter = 0;
     protected ServerSocket welcomingSocket;
 
-    public Server(){
-
-        try{
-            ServerSocket newSocket = new ServerSocket(port);
-
-            this.welcomingSocket = newSocket;
-        }
-        catch (Exception e) {
+    /**
+     * Create server object
+     */
+    public Server() {
+        try {
+            this.welcomingSocket = new ServerSocket(port);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-
-
 }

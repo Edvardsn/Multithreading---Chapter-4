@@ -3,8 +3,8 @@ package src;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
-
 
 /**
  * A single threaded server to handle client requests
@@ -12,13 +12,37 @@ import java.net.Socket;
  */
 public class SingleThreadServer extends Server implements Runnable {
 
+    boolean isStopped = false;
+    Socket incomingSocket; // declare variable
 
     /**
      * Creates a single threaded server
-     * 
      */
-    public SingleThreadServer(){
+    public SingleThreadServer() {
         super();
+    }
+
+    @Override
+    public void run() {
+
+        System.out.println("Listening on port: " + port);
+
+        while (!isStopped()) {
+
+            try {
+
+                incomingSocket = welcomingSocket.accept(); // listen for request
+
+                System.out.println("Request incoming, creating new connection socket at port : "
+                        + String.valueOf(incomingSocket.getPort() + "\n"));
+
+                handleClientRequest(incomingSocket);
+
+            } catch (Exception e) {
+                stop();
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -26,47 +50,30 @@ public class SingleThreadServer extends Server implements Runnable {
      * 
      * @param socket The socket originally used to communicate
      */
-    public void handleClientRequest(Socket incomingSocket) throws Exception{
-    
-        SearchSimulator simulator = new SearchSimulator();
-
+    public void handleClientRequest(Socket incomingSocket) throws Exception {
         // BufferedWriter: To save incoming data when sending is slower than reciving.
-        // PrintWrter: To be able to control when the data is sent. In bufferedwriter all data is sent once recieved.
-        // OutputstreamWriter: Converts charaters to bytes to be able to be sent as a stream
-        PrintWriter output = new PrintWriter(new BufferedWriter(new OutputStreamWriter(incomingSocket.getOutputStream())),true);
-
-        output.write(simulator.clientRequest());
-
-        System.out.println("Message sent \n");
+        // PrintWrter: To be able to control when the data is sent. In bufferedwriter
+        // all data is sent once recieved.
+        // OutputstreamWriter: Converts charaters to bytes to be able to be sent as a
+        // stream
+        System.out.println(incomingSocket.getInetAddress() + ":" + incomingSocket.getPort());
+        SearchSimulator.clientRequest(incomingSocket, "Single threaded server: ");
     }
 
-    @Override
-    public void run() {
+    private synchronized boolean isStopped() {
+        return this.isStopped = false;
+    }
 
-        while(true){
-          
-           System.out.println("Searching on port: " + this.port);
-            
-            try(Socket incomingSocket = welcomingSocket.accept();){
-
-                System.out.println("Request incoming, creating new connection socket at port : " 
-                + String.valueOf(incomingSocket.getPort() + "\n"));
-
-                handleClientRequest(incomingSocket);
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
+    /**
+     * Closes serversocket and stops server.
+     */
+    private synchronized void stop() {
+        System.out.println("Server stopped.");
+        this.isStopped = true;
+        try {
+            welcomingSocket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        
     }
 }
-
-
-
-
-
-
-
