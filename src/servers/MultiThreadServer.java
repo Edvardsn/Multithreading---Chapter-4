@@ -1,7 +1,9 @@
-package src;
+package src.servers;
 
 import java.io.IOException;
 import java.net.Socket;
+
+import src.computation.AsyncSearchSimulator;
 
 public class MultiThreadServer extends Server implements Runnable {
 

@@ -1,10 +1,12 @@
-package src;
+package src.servers;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import src.computation.SearchSimulator;
 
 /**
  * A single threaded server to handle client requests
@@ -51,11 +53,6 @@ public class SingleThreadServer extends Server implements Runnable {
      * @param socket The socket originally used to communicate
      */
     public void handleClientRequest(Socket incomingSocket) throws Exception {
-        // BufferedWriter: To save incoming data when sending is slower than reciving.
-        // PrintWrter: To be able to control when the data is sent. In bufferedwriter
-        // all data is sent once recieved.
-        // OutputstreamWriter: Converts charaters to bytes to be able to be sent as a
-        // stream
         System.out.println(incomingSocket.getInetAddress() + ":" + incomingSocket.getPort());
         SearchSimulator.clientRequest(incomingSocket, "Single threaded server: ");
     }

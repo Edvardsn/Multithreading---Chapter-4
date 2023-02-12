@@ -1,8 +1,10 @@
-package src;
+package src.computation;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import src.utils.ResponseGenerator;
 
 /**
  * Send a fake computational request to server.
